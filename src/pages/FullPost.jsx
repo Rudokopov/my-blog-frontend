@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 
 import { Post } from "../components/Post";
 import { Index } from "../components/AddComment";
 import { CommentsBlock } from "../components/CommentsBlock";
 
 export const FullPost = () => {
+  const [data, setData] = useState();
+  const { id } = useParams();
+
   return (
     <>
       <Post

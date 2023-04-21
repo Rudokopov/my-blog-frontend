@@ -9,7 +9,7 @@ import axios from "../axios";
 import { Post } from "../components/Post";
 import { TagsBlock } from "../components/TagsBlock";
 import { CommentsBlock } from "../components/CommentsBlock";
-import { fetchPosts } from "../redux/slices/posts";
+import { fetchPosts, fetchTags } from "../redux/slices/posts";
 
 export const Home = () => {
   const dispatch = useDispatch();
@@ -18,9 +18,11 @@ export const Home = () => {
   console.log(posts);
 
   const isPostsLoading = posts.status === "loading";
+  const isTagsLoading = tags.status === "loading";
 
   useEffect(() => {
     dispatch(fetchPosts());
+    dispatch(fetchTags());
   }, []);
 
   return (
@@ -40,27 +42,24 @@ export const Home = () => {
               <Post key={index} isLoading={true} />
             ) : (
               <Post
-                id={obj._id}
+                _id={obj._id}
                 title={obj.title}
                 imageUrl={obj.imageUrl}
                 user={{
                   avatarUrl: obj.owner.avatarUrl,
                   fullName: obj.owner.name,
                 }}
-                createdAt={"12 июня 2022 г."}
-                viewsCount={150}
+                createdAt={obj.createdAt}
+                viewsCount={obj.viewsCount}
                 commentsCount={3}
-                tags={["react", "fun", "typescript"]}
+                tags={obj.tags}
                 isEditable
               />
             )
           )}
         </Grid>
         <Grid xs={4} item>
-          <TagsBlock
-            items={["react", "typescript", "заметки"]}
-            isLoading={false}
-          />
+          <TagsBlock items={tags.items} isLoading={isTagsLoading} />
           <CommentsBlock
             items={[
               {
