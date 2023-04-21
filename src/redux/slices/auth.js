@@ -14,6 +14,14 @@ export const fetchAuthMe = createAsyncThunk("/login/fetchAuthMe", async () => {
   return data;
 });
 
+export const fetchReg = createAsyncThunk(
+  "/login/fetchRegister",
+  async (params) => {
+    const { data } = await axios.post("/register", params);
+    return data;
+  }
+);
+
 const initialState = {
   data: null,
   status: "loading",
@@ -49,6 +57,18 @@ const authSlice = createSlice({
       state.data = action.payload;
     },
     [fetchAuthMe.rejected]: (state) => {
+      state.status = "error";
+      state.data = null;
+    },
+    [fetchReg.pending]: (state) => {
+      state.status = "loading";
+      state.data = null;
+    },
+    [fetchReg.fulfilled]: (state, action) => {
+      state.status = "loaded";
+      state.data = action.payload;
+    },
+    [fetchReg.rejected]: (state) => {
       state.status = "error";
       state.data = null;
     },
