@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
@@ -8,10 +8,12 @@ import "easymde/dist/easymde.min.css";
 import styles from "./AddPost.module.scss";
 import { useSelector } from "react-redux";
 import { selectIsAuth } from "../../redux/slices/auth";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "../../axios";
 
 export const AddPost = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const isAuth = useSelector(selectIsAuth);
   const [isLoading, setLoading] = useState(false);
 
@@ -20,6 +22,8 @@ export const AddPost = () => {
   const [title, setTitle] = useState("");
   const [tags, setTags] = useState("");
   const inputFileRef = useRef(null);
+
+  const isEditing = Boolean(id);
 
   const handleChangeFile = async (e) => {
     try {
@@ -49,19 +53,36 @@ export const AddPost = () => {
       const fields = {
         title,
         imageUrl,
-        tags: tags.split(","),
+        tags,
         text,
       };
 
-      const { data } = await axios.post("/post", fields);
+      const { data } = isEditing
+        ? await axios.patch(`/post/${id}`, fields)
+        : await axios.post("/post", fields);
 
-      const id = data._id;
-      <Navigate to={`/post/${id}`} />;
+      const _id = isEditing ? id : data._id;
+
+      navigate(`/post/${_id}`);
     } catch (err) {
       console.log(err);
       alert("Ошибка при создании статьи");
     }
   };
+
+  useEffect(() => {
+    if (id) {
+      axios
+        .get(`/post/${id}`)
+        .then(({ data }) => {
+          setTitle(data.title);
+          setText(data.text);
+          setImageUrl(data.imageUrl);
+          setTags(data.tags).join(",");
+        })
+        .catch((err) => console.log(err));
+    }
+  }, []);
 
   const options = React.useMemo(
     () => ({
@@ -81,8 +102,6 @@ export const AddPost = () => {
   if (!window.localStorage.getItem("token") && !isAuth) {
     return <Navigate to={"/"} />;
   }
-
-  // Нужно разобраться почему не работает стейт навигейт и не перенаправляет на страницу с полным постом при его создании
 
   return (
     <Paper style={{ padding: 30 }}>
@@ -118,38 +137,37 @@ export const AddPost = () => {
 
       <br />
       <br />
-      <form onSubmit={onSubmit}>
-        <TextField
-          classes={{ root: styles.title }}
-          variant="standard"
-          placeholder="Заголовок статьи..."
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          fullWidth
-        />
-        <TextField
-          classes={{ root: styles.tags }}
-          variant="standard"
-          placeholder="Тэги"
-          value={tags}
-          onChange={(e) => setTags(e.target.value)}
-          fullWidth
-        />
-        <SimpleMDE
-          className={styles.editor}
-          value={text}
-          onChange={onChange}
-          options={options}
-        />
-        <div className={styles.buttons}>
-          <Button type="submit" size="large" variant="contained">
-            Опубликовать
-          </Button>
-          <Link to="/">
-            <Button size="large">Отмена</Button>
-          </Link>
-        </div>
-      </form>
+
+      <TextField
+        classes={{ root: styles.title }}
+        variant="standard"
+        placeholder="Заголовок статьи..."
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        fullWidth
+      />
+      <TextField
+        classes={{ root: styles.tags }}
+        variant="standard"
+        placeholder="Тэги"
+        value={tags}
+        onChange={(e) => setTags(e.target.value)}
+        fullWidth
+      />
+      <SimpleMDE
+        className={styles.editor}
+        value={text}
+        onChange={onChange}
+        options={options}
+      />
+      <div className={styles.buttons}>
+        <Button onClick={onSubmit} size="large" variant="contained">
+          {isEditing ? "Изменить" : "Опубликовать"}
+        </Button>
+        <Link to="/">
+          <Button size="large">Отмена</Button>
+        </Link>
+      </div>
     </Paper>
   );
 };
