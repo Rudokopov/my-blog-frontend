@@ -16,8 +16,6 @@ export const Home = () => {
   const userData = useSelector((state) => state.auth.data);
   const { posts, tags } = useSelector((state) => state.posts);
 
-  console.log(userData);
-
   const isPostsLoading = posts.status === "loading";
   const isTagsLoading = tags.status === "loading";
 
@@ -44,8 +42,11 @@ export const Home = () => {
             ) : (
               <Post
                 _id={obj._id}
+                key={obj._id}
                 title={obj.title}
-                imageUrl={obj.imageUrl}
+                imageUrl={
+                  obj.imageUrl ? `http://localhost:4444${obj.imageUrl}` : ""
+                }
                 user={{
                   avatarUrl: obj.owner.avatarUrl,
                   fullName: obj.owner.name,
@@ -54,7 +55,9 @@ export const Home = () => {
                 viewsCount={obj.viewsCount}
                 commentsCount={3}
                 tags={obj.tags}
-                isEditable={userData?._id === obj.owner._id}
+                isEditable={
+                  userData?.userData._id === obj.owner._id ? true : false // Ломает прилу при обновлении страницы
+                }
               />
             )
           )}
