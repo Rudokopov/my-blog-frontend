@@ -16,6 +16,8 @@ export const Home = () => {
   const userData = useSelector((state) => state.auth.data);
   const { posts, tags } = useSelector((state) => state.posts);
 
+  console.log(userData);
+
   const isPostsLoading = posts.status === "loading";
   const isTagsLoading = tags.status === "loading";
 
@@ -56,7 +58,9 @@ export const Home = () => {
                 commentsCount={3}
                 tags={obj.tags}
                 isEditable={
-                  userData?.userData._id === obj.owner._id ? true : false // Ломает прилу при обновлении страницы
+                  userData === null
+                    ? false
+                    : userData.userData?._id === obj.owner._id // Ломает прилу при обновлении страницы
                 }
               />
             )

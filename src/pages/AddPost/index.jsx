@@ -53,7 +53,7 @@ export const AddPost = () => {
       const fields = {
         title,
         imageUrl,
-        tags,
+        tags: tags.replace(/ /g, ","),
         text,
       };
 
@@ -78,7 +78,7 @@ export const AddPost = () => {
           setTitle(data.title);
           setText(data.text);
           setImageUrl(data.imageUrl);
-          setTags(data.tags).join(",");
+          setTags(data.tags);
         })
         .catch((err) => console.log(err));
     }

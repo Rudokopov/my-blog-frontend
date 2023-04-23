@@ -9,9 +9,10 @@ import { useForm } from "react-hook-form";
 
 import styles from "./Login.module.scss";
 import { selectIsAuth, fetchReg } from "../../redux/slices/auth";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export const Registration = () => {
+  const navigate = useNavigate();
   const isAuth = useSelector(selectIsAuth);
   const dispatch = useDispatch();
 
@@ -37,6 +38,7 @@ export const Registration = () => {
     }
     if ("token" in data.payload) {
       window.localStorage.setItem("token", data.payload.token);
+      navigate("/");
     }
   };
   return (
