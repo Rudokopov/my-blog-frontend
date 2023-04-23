@@ -146,7 +146,7 @@ export const AddPost = () => {
         onChange={(e) => setTitle(e.target.value)}
         fullWidth
       />
-      {isEditing && (
+      {!isEditing && (
         <TextField
           classes={{ root: styles.tags }}
           variant="standard"
