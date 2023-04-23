@@ -47,7 +47,9 @@ export const Home = () => {
                 key={obj._id}
                 title={obj.title}
                 imageUrl={
-                  obj.imageUrl ? `http://localhost:4444${obj.imageUrl}` : ""
+                  obj.imageUrl
+                    ? `${process.env.REACT_APP_API_URL}${obj.imageUrl}`
+                    : ""
                 }
                 user={{
                   avatarUrl: obj.owner.avatarUrl,
