@@ -53,9 +53,10 @@ export const AddPost = () => {
       const fields = {
         title,
         imageUrl,
-        tags: tags.replace(/ /g, ","),
+        tags,
         text,
       };
+      console.log(tags);
 
       const { data } = isEditing
         ? await axios.patch(`/post/${id}`, fields)
@@ -78,7 +79,7 @@ export const AddPost = () => {
           setTitle(data.title);
           setText(data.text);
           setImageUrl(data.imageUrl);
-          setTags(data.tags);
+          setTags(data.tags.join(","));
         })
         .catch((err) => console.log(err));
     }
@@ -146,16 +147,15 @@ export const AddPost = () => {
         onChange={(e) => setTitle(e.target.value)}
         fullWidth
       />
-      {!isEditing && (
-        <TextField
-          classes={{ root: styles.tags }}
-          variant="standard"
-          placeholder="Тэги"
-          value={tags}
-          onChange={(e) => setTags(e.target.value)}
-          fullWidth
-        />
-      )}
+
+      <TextField
+        classes={{ root: styles.tags }}
+        variant="standard"
+        placeholder="Тэги"
+        value={tags}
+        onChange={(e) => setTags(e.target.value)}
+        fullWidth
+      />
 
       <SimpleMDE
         className={styles.editor}
