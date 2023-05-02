@@ -67,7 +67,7 @@ export const Home = () => {
                   isEditable={
                     userData === null
                       ? false
-                      : userData.userData?._id === obj.owner._id // Ломает прилу при обновлении страницы
+                      : userData.userData?._id === obj.owner._id // нужно поправить, не появляется возможнсть редактирования
                   }
                 />
               )
