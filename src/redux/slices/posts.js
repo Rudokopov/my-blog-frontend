@@ -47,11 +47,16 @@ const initialState = {
 const postsSlice = createSlice({
   name: "posts",
   initialState,
-  reducers: {},
+  reducers: {
+    setSortDefault(state) {
+      state.posts.sortType = 0;
+    },
+  },
   extraReducers: {
     // Получение статей
     [fetchPosts.pending]: (state) => {
       state.posts.items = [];
+      state.posts.sortType = 0;
       state.posts.status = "loading";
     },
     [fetchPosts.fulfilled]: (state, action) => {
@@ -66,6 +71,7 @@ const postsSlice = createSlice({
     // Получение статей по тегам
     [fetchPostsCurrent.pending]: (state) => {
       state.posts.items = [];
+      state.posts.sortType = 0;
       state.posts.status = "loading";
     },
     [fetchPostsCurrent.fulfilled]: (state, action) => {
@@ -118,5 +124,5 @@ const postsSlice = createSlice({
   },
 });
 
-export const { setSortType } = postsSlice.actions;
+export const { setSortDefault } = postsSlice.actions;
 export const postsReducer = postsSlice.reducer;
