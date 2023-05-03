@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -7,13 +7,14 @@ import Grid from "@mui/material/Grid";
 import { Post } from "../components/Post";
 import { TagsBlock } from "../components/TagsBlock";
 import { CommentsBlock } from "../components/CommentsBlock";
-import { fetchPosts, fetchTags } from "../redux/slices/posts";
+import { fetchPosts, fetchTags, fetchSortPosts } from "../redux/slices/posts";
 import { IsMobileContext } from "../App";
 
 export const Home = () => {
   const { isScreenMd } = useContext(IsMobileContext);
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth.data);
+  const sort = useSelector((state) => state.posts.posts.sortType);
   const { posts, tags } = useSelector((state) => state.posts);
 
   const isPostsLoading = posts.status === "loading";
@@ -28,11 +29,16 @@ export const Home = () => {
     <>
       <Tabs
         style={{ marginBottom: 15 }}
-        value={0}
+        value={sort}
         aria-label="basic tabs example"
       >
         <Tab label="Новые" />
-        <Tab label="Популярные" />
+        <Tab
+          label="Популярные"
+          onClick={() => {
+            dispatch(fetchSortPosts(1));
+          }}
+        />
       </Tabs>
 
       {isScreenMd ? (
@@ -62,7 +68,7 @@ export const Home = () => {
                   isEditable={
                     userData === null
                       ? false
-                      : userData.userData?._id === obj.owner._id // нужно поправить, не появляется возможнсть редактирования
+                      : userData.userData?._id === obj.owner._id // нужно поправить, не появляется возможность редактирования
                   }
                 />
               )

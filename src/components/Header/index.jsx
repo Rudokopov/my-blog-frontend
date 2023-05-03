@@ -6,6 +6,7 @@ import { logout, selectIsAuth } from "../../redux/slices/auth";
 
 import styles from "./Header.module.scss";
 import Container from "@mui/material/Container";
+import { fetchPosts } from "../../redux/slices/posts";
 
 export const Header = () => {
   const dispatch = useDispatch();
@@ -22,7 +23,11 @@ export const Header = () => {
     <div className={styles.root}>
       <Container maxWidth="lg">
         <div className={styles.inner}>
-          <Link className={styles.logo} to="/">
+          <Link
+            className={styles.logo}
+            to="/"
+            onClick={() => dispatch(fetchPosts())}
+          >
             <div>RUDOKOPOV BLOG</div>
           </Link>
           <div className={styles.buttons}>

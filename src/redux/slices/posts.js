@@ -3,8 +3,25 @@ import axios from "../../axios";
 
 export const fetchPosts = createAsyncThunk("post/fetchPosts", async () => {
   const { data } = await axios.get("/post");
+  console.log(data);
   return data;
 });
+
+export const fetchPostsCurrent = createAsyncThunk(
+  "post/fetchPostsCurrent",
+  async (name) => {
+    const { data } = await axios.get(`/tags?tag=${name}`);
+    return data;
+  }
+);
+
+export const fetchSortPosts = createAsyncThunk(
+  "post/fetchSortPosts",
+  async (sortType) => {
+    const { data } = await axios.get(`/post/sort/?sortType=${sortType}`);
+    return data;
+  }
+);
 
 export const fetchTags = createAsyncThunk("post/fetchTags", async () => {
   const { data } = await axios.get("/post/tags");
@@ -18,6 +35,7 @@ export const fetchRemovePost = createAsyncThunk("post/fetchPost", async (id) =>
 const initialState = {
   posts: {
     items: [],
+    sortType: 0,
     status: "loading",
   },
   tags: {
@@ -32,7 +50,6 @@ const postsSlice = createSlice({
   reducers: {},
   extraReducers: {
     // Получение статей
-
     [fetchPosts.pending]: (state) => {
       state.posts.items = [];
       state.posts.status = "loading";
@@ -46,8 +63,36 @@ const postsSlice = createSlice({
       state.posts.status = "error";
     },
 
-    // Получение тэгов
+    // Получение статей по тегам
+    [fetchPostsCurrent.pending]: (state) => {
+      state.posts.items = [];
+      state.posts.status = "loading";
+    },
+    [fetchPostsCurrent.fulfilled]: (state, action) => {
+      state.posts.items = action.payload;
+      state.posts.status = "loaded";
+    },
+    [fetchPostsCurrent.rejected]: (state, action) => {
+      state.posts.items = [];
+      state.posts.status = "error";
+    },
 
+    // Сортировка статей
+    [fetchSortPosts.pending]: (state, action) => {
+      state.posts.items = [];
+      state.posts.sortType = action.meta.arg;
+      state.posts.status = "loading";
+    },
+    [fetchSortPosts.fulfilled]: (state, action) => {
+      state.posts.items = action.payload;
+      state.posts.status = "loaded";
+    },
+    [fetchSortPosts.rejected]: (state) => {
+      state.posts.items = [];
+      state.posts.status = "error";
+    },
+
+    // Получение тэгов
     [fetchTags.pending]: (state) => {
       state.tags.items = [];
       state.tags.status = "loading";
@@ -62,7 +107,6 @@ const postsSlice = createSlice({
     },
 
     // Удаление статьи
-
     [fetchRemovePost.pending]: (state, action) => {
       state.posts.items = state.posts.items.filter(
         (obj) => obj._id !== action.meta.arg
@@ -74,4 +118,5 @@ const postsSlice = createSlice({
   },
 });
 
+export const { setSortType } = postsSlice.actions;
 export const postsReducer = postsSlice.reducer;

@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { fetchPostsCurrent, setSortType } from "../redux/slices/posts";
 
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -12,6 +14,8 @@ import Skeleton from "@mui/material/Skeleton";
 import { SideBlock } from "./SideBlock";
 
 export const TagsBlock = ({ items, isLoading = true }) => {
+  const dispatch = useDispatch();
+
   return (
     <SideBlock title="Тэги">
       <List>
@@ -20,6 +24,9 @@ export const TagsBlock = ({ items, isLoading = true }) => {
             key={i}
             style={{ textDecoration: "none", color: "black" }}
             to={`/tags/${name}`}
+            onClick={() => {
+              dispatch(fetchPostsCurrent(name));
+            }}
           >
             <ListItem key={i} disablePadding>
               <ListItemButton>
