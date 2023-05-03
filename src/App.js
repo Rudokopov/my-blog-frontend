@@ -4,10 +4,14 @@ import Container from "@mui/material/Container";
 
 import { Header } from "./components";
 import { Home, FullPost, Registration, AddPost, Login } from "./pages";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { fetchAuthMe, selectIsAuth } from "./redux/slices/auth";
+import { useResize } from "./utils/useResize";
+
+export const IsMobileContext = createContext("");
 
 function App() {
+  const { isScreenMd } = useResize();
   const [post, setPost] = useState();
 
   const dispatch = useDispatch();
@@ -18,19 +22,21 @@ function App() {
   }, []);
   return (
     <>
-      <Header />
-      <Container maxWidth="lg">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/post/:id" element={<FullPost />} />
-          <Route path="/post/:id/edit" element={<AddPost />} />
-          <Route path="/add-post" element={<AddPost />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Registration />} />
+      <IsMobileContext.Provider value={{ isScreenMd }}>
+        <Header />
+        <Container maxWidth="lg">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/post/:id" element={<FullPost />} />
+            <Route path="/post/:id/edit" element={<AddPost />} />
+            <Route path="/add-post" element={<AddPost />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Registration />} />
 
-          <Route path="/tags/:id" element={<Home />} />
-        </Routes>
-      </Container>
+            <Route path="/tags/:id" element={<Home />} />
+          </Routes>
+        </Container>
+      </IsMobileContext.Provider>
     </>
   );
 }
