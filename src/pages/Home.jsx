@@ -86,17 +86,17 @@ export const Home = () => {
               items={[
                 {
                   user: {
-                    fullName: "Вася Пупкин",
+                    fullName: "Леонид Каневский",
                     avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
                   },
-                  text: "Это тестовый комментарий",
+                  text: "Люблю оставлять комментарии - теперь и вы можете!",
                 },
                 {
                   user: {
                     fullName: "Иван Иванов",
                     avatarUrl: "https://mui.com/static/images/avatar/2.jpg",
                   },
-                  text: "When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top",
+                  text: "Для меня почетно быть на главной странице, оставляйте комментарии и однажды, когда админ отхаркодит здесь статику, ваш комментарий окажется на этом месте!",
                 },
               ]}
               isLoading={false}

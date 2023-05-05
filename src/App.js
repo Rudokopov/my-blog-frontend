@@ -12,7 +12,6 @@ export const IsMobileContext = createContext("");
 
 function App() {
   const { isScreenMd } = useResize();
-  const [post, setPost] = useState();
 
   const dispatch = useDispatch();
   const isAuth = useSelector(selectIsAuth);
@@ -27,7 +26,7 @@ function App() {
         <Container maxWidth="lg">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/post/:id" element={<FullPost />} />
+            <Route path="/post/:id" element={<FullPost isAuth={isAuth} />} />
             <Route path="/post/:id/edit" element={<AddPost />} />
             <Route path="/add-post" element={<AddPost />} />
             <Route path="/login" element={<Login />} />

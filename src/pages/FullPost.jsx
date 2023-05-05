@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import moment from "moment";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { Post } from "../components/Post";
 import { Index } from "../components/AddComment";
@@ -9,7 +9,8 @@ import { CommentsBlock } from "../components/CommentsBlock";
 import axios from "../axios";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
-export const FullPost = () => {
+export const FullPost = (props) => {
+  const { isAuth } = props;
   const [data, setData] = useState();
   const [isLoading, setLoading] = useState(true);
   const { id } = useParams();
@@ -76,7 +77,7 @@ export const FullPost = () => {
         // ]}
         isLoading={false}
       >
-        <Index />
+        {isAuth && <Index />}
       </CommentsBlock>
     </>
   );
