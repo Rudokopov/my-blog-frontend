@@ -20,7 +20,11 @@ export const CommentsBlock = ({ items, children, isLoading = true }) => {
                 {isLoading ? (
                   <Skeleton variant="circular" width={40} height={40} />
                 ) : (
-                  <Avatar alt={obj.user.fullName} src={obj.user.avatarUrl} />
+                  <Avatar
+                    alt={obj.name}
+                    src="https://images.unsplash.com/photo-1683115763606-43dd57a47712?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80"
+                  /> // Заглушка
+                  // <Avatar alt={obj.user.fullName} src={obj.user.avatarUrl} /> // Нужно придумать как аватарку овнера на сервере прикручивать к схеме коммента
                 )}
               </ListItemAvatar>
               {isLoading ? (
@@ -29,10 +33,7 @@ export const CommentsBlock = ({ items, children, isLoading = true }) => {
                   <Skeleton variant="text" height={18} width={230} />
                 </div>
               ) : (
-                <ListItemText
-                  primary={obj.user.fullName}
-                  secondary={obj.text}
-                />
+                <ListItemText primary={obj.name} secondary={obj.text} />
               )}
             </ListItem>
             <Divider variant="inset" component="li" />

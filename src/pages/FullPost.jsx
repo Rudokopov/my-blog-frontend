@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import moment from "moment";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Post } from "../components/Post";
 import { Index } from "../components/AddComment";
@@ -12,6 +14,8 @@ export const FullPost = () => {
   const [isLoading, setLoading] = useState(true);
   const { id } = useParams();
 
+  const comment = useSelector((state) => state.posts.posts);
+
   useEffect(() => {
     axios
       .get(`/post/${id}`)
@@ -19,28 +23,28 @@ export const FullPost = () => {
         setData(res.data);
         setLoading(false);
       })
+
       .catch((err) => console.log(err.message));
-  }, []);
+  }, [comment]);
+
+  console.log(data);
 
   if (isLoading) {
     return <Post isLoading={isLoading} isFullPost />;
   }
-
   return (
     <>
       <Post
         id={data._id}
         title={data.title}
         imageUrl={
-          data.imageUrl
-            ? `${process.env.REACT_APP_API_URL}${data.imageUrl}`
-            : ""
+          data.imageUrl ? `${"http://localhost:4444"}${data.imageUrl}` : ""
         }
         user={{
           avatarUrl: data.owner.avatarUrl,
           fullName: data.owner.name,
         }}
-        createdAt={data.createdAt}
+        createdAt={moment(data.createdAt).format("DD MMMM  HH:mm ")}
         viewsCount={data.viewsCount}
         commentsCount={3}
         tags={data.tags}
@@ -51,22 +55,23 @@ export const FullPost = () => {
         </p>
       </Post>
       <CommentsBlock
-        items={[
-          {
-            user: {
-              fullName: "Вася Пупкин",
-              avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
-            },
-            text: "Это тестовый комментарий 555555",
-          },
-          {
-            user: {
-              fullName: "Иван Иванов",
-              avatarUrl: "https://mui.com/static/images/avatar/2.jpg",
-            },
-            text: "When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top",
-          },
-        ]}
+        items={data.comments}
+        // items={[
+        //   {
+        //     user: {
+        //       fullName: "Вася Пупкин",
+        //       avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
+        //     },
+        //     text: "Это тестовый комментарий 555555",
+        //   },
+        //   {
+        //     user: {
+        //       fullName: "Иван Иванов",
+        //       avatarUrl: "https://mui.com/static/images/avatar/2.jpg",
+        //     },
+        //     text: "When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top",
+        //   },
+        // ]}
         isLoading={false}
       >
         <Index />

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Grid from "@mui/material/Grid";
+import moment from "moment";
 
 import { Post } from "../components/Post";
 import { TagsBlock } from "../components/TagsBlock";
@@ -21,7 +22,7 @@ export const Home = () => {
   const isTagsLoading = tags.status === "loading";
 
   useEffect(() => {
-    dispatch(fetchPosts());
+    dispatch(fetchSortPosts(0));
     dispatch(fetchTags());
   }, []);
 
@@ -32,7 +33,12 @@ export const Home = () => {
         value={sort}
         aria-label="basic tabs example"
       >
-        <Tab label="Новые" />
+        <Tab
+          label="Новые"
+          onClick={() => {
+            dispatch(fetchSortPosts(0));
+          }}
+        />
         <Tab
           label="Популярные"
           onClick={() => {
@@ -46,7 +52,7 @@ export const Home = () => {
           <Grid xs={8} item>
             {(isPostsLoading ? [...Array(5)] : posts.items).map((obj, index) =>
               isPostsLoading ? (
-                <Post key={index} isLoading={true} />
+                (console.log(obj), (<Post key={index} isLoading={true} />))
               ) : (
                 <Post
                   _id={obj._id}
@@ -54,14 +60,14 @@ export const Home = () => {
                   title={obj.title}
                   imageUrl={
                     obj.imageUrl
-                      ? `${process.env.REACT_APP_API_URL}${obj.imageUrl}`
+                      ? `${"http://localhost:4444"}${obj.imageUrl}`
                       : ""
                   }
                   user={{
                     avatarUrl: obj.owner.avatarUrl,
                     fullName: obj.owner.name,
                   }}
-                  createdAt={obj.createdAt}
+                  createdAt={moment(obj.createdAt).format("DD MMMM  HH:mm ")}
                   viewsCount={obj.viewsCount}
                   commentsCount={3}
                   tags={obj.tags}
